@@ -216,5 +216,37 @@ navigationLinks.forEach(function(link){
 	 })
 });
 
+//server-side posting work day-4
+
+const modalForm=document.querySelector('.modal-form'); 
+const postData = dataUser => fetch('server.php', {
+	method: 'POST',
+	body: dataUser,
+});
+modalForm.addEventListener('submit', event=>{
+	event.preventDefault();
+    
+	const formData= new FormData(modalForm);
+	formData.append('cart',JSON.stringify(cart.cartGoods));
+
+	postData(formData)
+	    .then(response=>{
+             if(!response.ok){
+                throw new Error(response.status);
+			 }
+			 alert('Ваш заказ успешно отправлен, с вами свяжутся в ближайшее время');
+			 console.log(response.statusText);
+		})
+		.catch(err=>{
+			alert('К сожалению произошла ошибка, повторите попытку позже');
+			console.error(err);
+		})
+		.finally(()=>{
+			closeModal();
+			modalForm.reset();
+			cart.cartGoods.length=0;
+		});
+});
+
 
 
